@@ -381,7 +381,7 @@ property>${property.javaTypeInEntity} ${property.propertyName}<#if property_has_
 -->
 <#if entity.active>
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.
+    * Convenient call for greendao.AbstractDao#delete(Object).
     * Entity must attached to an entity context.
     */
     @Generated
@@ -391,7 +391,7 @@ property>${property.javaTypeInEntity} ${property.propertyName}<#if property_has_
     }
 
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#update(Object)}.
+    * Convenient call for greendao.AbstractDao#update(Object).
     * Entity must attached to an entity context.
     */
     @Generated
@@ -401,7 +401,7 @@ property>${property.javaTypeInEntity} ${property.propertyName}<#if property_has_
     }
 
     /**
-    * Convenient call for {@link org.greenrobot.greendao.AbstractDao#refresh(Object)}.
+    * Convenient call for greendao.AbstractDao#refresh(Object).
     * Entity must attached to an entity context.
     */
     @Generated

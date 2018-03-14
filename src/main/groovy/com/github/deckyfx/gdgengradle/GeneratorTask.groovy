@@ -61,7 +61,7 @@ class GeneratorTask extends DefaultTask {
             this.writeFile(schemaPath, "{\"Table1Name\":{\"active\":true,\"enableKeep\":true,\"extends\":\"\",\"implements\":\"\",\"serializeable\":true,\"import\":\"\",\"javadoc\":\"\",\"anotation\":\"\",\"defaultValue\":0,\"fields\":[{\"name\":\"id\",\"type\":\"id\",\"customType\":\"\",\"converter\":\"\",\"anotation\":\"\",\"anotationGetter\":\"\",\"anotationSetter\":\"\",\"anotationGetterSetter\":\"\",\"javadoc\":\"\",\"javadocGetter\":\"\",\"javadocSetter\":\"\",\"javadocGetterSetter\":\"\",\"isAutoIncrement\":true,\"notNull\":true}],\"relations\":[{\"target\":\"Table 2 Name\",\"type\":\"hasOne\",\"chainField\":\"tbl2_data\",\"name\":\"relationName\",\"anotation\":\"\",\"anotationGetter\":\"\",\"anotationSetter\":\"\",\"anotationGetterSetter\":\"\",\"javadoc\":\"\",\"javadocGetter\":\"\",\"javadocSetter\":\"\",\"javadocGetterSetter\":\"\"}]}}")
             this.mSchemaFile            = new File(schemaPath)
         }
-        String schemaText               = this.readFile(schemaPath);
+        String schemaText               = this.readFile(schemaPath).replaceAll("\\r\\n|\\r|\\n|\\t", " ");
         SimpleDateFormat sdf            = new SimpleDateFormat(SCHEMA_VERSION_FORMAT)
         this.mSchemaVersion             = Integer.parseInt(sdf.format(this.mSchemaFile.lastModified()))
         String daoMasterPath            = this.mJavaSrcDir + this.mProjectDAOPackageName.replace(".", "/") + "/DaoMaster.java";
