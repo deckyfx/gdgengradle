@@ -1,0 +1,59 @@
+{
+  "Table1Name": {
+    "active": true,
+    "enableKeep": true,
+    "extends": "",
+    "implements": [],
+    "serializeable": true,
+    "imports": [],
+    "javadoc": "",
+    "anotation": "",
+    "defaultValue": 0,
+    "fields": [
+      {
+        "name": "id",
+        "type": "id",
+        "customType": "",
+        "converter": "",
+        "anotation": "",
+        "anotationGetter": "",
+        "anotationSetter": "",
+        "anotationGetterSetter": "",
+        "javadoc": "",
+        "javadocGetter": "",
+        "javadocSetter": "",
+        "javadocGetterSetter": "",
+        "isAutoIncrement": true,
+        "notNull": true
+      }
+    ],
+    "relations": [
+      {
+        "target": "Table2Name",
+        "type": "hasOne",
+        "chainField": "tbl2_data",
+        "name": "relationName",
+        "anotation": "",
+        "anotationGetter": "",
+        "anotationSetter": "",
+        "anotationGetterSetter": "",
+        "javadoc": "",
+        "javadocGetter": "",
+        "javadocSetter": "",
+        "javadocGetterSetter": ""
+      }
+    ]
+  },
+  "Table2Name": {
+    "active": true,
+    "enableKeep": true,
+    "fields": [
+      {
+        "name": "id",
+        "type": "id",
+        "isAutoIncrement": true,
+        "notNull": true
+      }
+    ]
+  }
+}

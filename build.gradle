@@ -24,7 +24,7 @@ apply plugin: 'java-gradle-plugin'
 // project
 
 group 'com.github.deckyfx'
-version '1.0.0'
+version '1.0.2'
 sourceCompatibility = 1.8
 
 repositories {
@@ -66,6 +66,7 @@ jar {
     }
     from('src/main/resources') {
         include '*.ftl'
+        include '*.json'
     }
     from {
         configurations.releaseJars.collect {
@@ -89,9 +90,7 @@ dependencies {
     implementation localGroovy()
 
     testImplementation 'junit:junit:4.12'
-    //compile 'org.json:json:20180130'
-    //compile 'org.freemarker:freemarker:2.3.26-incubating'
 
-    releaseJars 'org.json:json:20180130'
+    releaseJars 'com.google.code.gson:gson:2.8.2'
     releaseJars 'org.freemarker:freemarker:2.3.26-incubating'
 }

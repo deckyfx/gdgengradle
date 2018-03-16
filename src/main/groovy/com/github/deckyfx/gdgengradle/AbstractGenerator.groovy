@@ -2,46 +2,50 @@ package com.github.deckyfx.gdgengradle
 
 import com.github.deckyfx.gdgengradle.generator.DaoGenerator
 import com.github.deckyfx.gdgengradle.generator.Schema
+import com.github.deckyfx.gdgengradle.schema.SchemaAdaptor
 import org.gradle.api.DefaultTask
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.TaskAction
-import org.json.JSONException
-import org.json.JSONObject
 
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import com.github.deckyfx.gdgengradle.EntityInfo
 
-class GeneratorTask extends DefaultTask {
+class AbstractGenerator extends DefaultTask {
     /* Do not modify this part unless necessary */
+    public final static String TASK_NAME                    = "generateModels"
+    public final static String FORCE_TASK_NAME              = "forceGenerateModels"
+    private final static String DESCRIPTION                 = "Generate greendao models if detect schema file changes"
+
+
     private static final String SCHEMA_VERSION_FORMAT       = "yyMMddHHmm"
     private static final int CHANGES_TRESSHOLD              = 2
 
     /* Do not modify this part bellow */
     private Schema mSchema
-    private HashMap<String, EntityInfo> mEntities
     private int mSchemaVersion;
     private String mJavaSrcDir, mProjectRoot,
                    mProjectPackageName, mProjectDAOPackageName,
                    mProjectTestDAOPackageName
-
     private File mSchemaFile, mManifestFile
 
-    GeneratorTask() {
+    final Property<Boolean> force                           = project.objects.property(Boolean)
+
+    AbstractGenerator() {
         this.group                  = GDGenGradle.TASK_GROUP
-        this.description            = "Generate model"
+        this.description            = DESCRIPTION
     }
 
     @TaskAction
     void start() {
-        assert project : 'Null project is illegal'
-        init(project.getProjectDir().toString())
+        this.init()
     }
 
-    void init(String rootPath) {
-        this.mProjectRoot               = rootPath
-        this.Log("Set root path to: " + this.mProjectRoot)
+    protected void init() {
+        assert project : 'Null project is illegal'
+        this.mProjectRoot               = project.getProjectDir().toString()
+        Log.log("Set root path to: " + this.mProjectRoot)
         assert Paths.get(this.mProjectRoot) : "Root path is invalid, quiting"
         this.mJavaSrcDir                = this.mProjectRoot + "/src/main/java/"
         assert Paths.get(this.mJavaSrcDir) : "Java source path is invalid, quiting"
@@ -55,10 +59,11 @@ class GeneratorTask extends DefaultTask {
         this.mProjectPackageName        = matcher.group(1)
         this.mProjectDAOPackageName     = matcher.group(1) + ".dao"
         this.mProjectTestDAOPackageName = matcher.group(1) + ".test"
-        String schemaPath               = rootPath + "/schema.json"
+        String schemaPath               = this.mProjectRoot + "/schema.json"
         this.mSchemaFile                = new File(schemaPath)
         if (!this.mSchemaFile.isFile()) {
-            this.writeFile(schemaPath, "{\"Table1Name\":{\"active\":true,\"enableKeep\":true,\"extends\":\"\",\"implements\":\"\",\"serializeable\":true,\"import\":\"\",\"javadoc\":\"\",\"anotation\":\"\",\"defaultValue\":0,\"fields\":[{\"name\":\"id\",\"type\":\"id\",\"customType\":\"\",\"converter\":\"\",\"anotation\":\"\",\"anotationGetter\":\"\",\"anotationSetter\":\"\",\"anotationGetterSetter\":\"\",\"javadoc\":\"\",\"javadocGetter\":\"\",\"javadocSetter\":\"\",\"javadocGetterSetter\":\"\",\"isAutoIncrement\":true,\"notNull\":true}],\"relations\":[{\"target\":\"Table 2 Name\",\"type\":\"hasOne\",\"chainField\":\"tbl2_data\",\"name\":\"relationName\",\"anotation\":\"\",\"anotationGetter\":\"\",\"anotationSetter\":\"\",\"anotationGetterSetter\":\"\",\"javadoc\":\"\",\"javadocGetter\":\"\",\"javadocSetter\":\"\",\"javadocGetterSetter\":\"\"}]}}")
+            File sampleFile             = new File(getClass().getResource('/sample.json').toURI());
+            this.writeFile(schemaPath, sampleFile.text)
             this.mSchemaFile            = new File(schemaPath)
         }
         String schemaText               = this.readFile(schemaPath).replaceAll("\\r\\n|\\r|\\n|\\t", " ");
@@ -75,11 +80,11 @@ class GeneratorTask extends DefaultTask {
                 lastVersion             = Integer.parseInt(matcherDaoMaster.group(1))
             }
         }
-        if (this.mSchemaVersion <= lastVersion) {
-            this.Log("No schema changes, quiting")
+        if (!force.get() && this.mSchemaVersion <= lastVersion) {
+            Log.log("No schema changes, quiting")
             return
         }
-        this.Log("Generating models for schema version " + this.mSchemaVersion)
+        Log.log("Generating models for schema version " + this.mSchemaVersion)
         // Schema options
         // Create schema arguments => (schema_versionn, generated_dao_object_package)
         this.mSchema                    = new Schema(this.mSchemaVersion, this.mProjectDAOPackageName)
@@ -91,31 +96,15 @@ class GeneratorTask extends DefaultTask {
         this.mSchema.enableActiveEntitiesByDefault()
         // optional: enable KEEP section support
         this.mSchema.enableKeepSectionsByDefault()
-        this.mEntities                  = new HashMap<String, EntityInfo>()
-        try {
-            JSONObject schemajson       = new JSONObject(schemaText)
-            Iterator<?> keys            = schemajson.keys()
-            while( keys.hasNext() ){
-                String tableName        = (String)keys.next()
-                if( schemajson.get(tableName) instanceof JSONObject ){
-                    this.mEntities.put(tableName, new EntityInfo(this.mSchema, this.mProjectPackageName, tableName, schemajson.getJSONObject(tableName)));
-                    this.Log("Preparing model entity " + tableName);
-                }
-            }
-            for (EntityInfo entityinfo : this.mEntities.values()) {
-                entityinfo.buildRelation(this.mEntities);
-                String log = entityinfo.getRelationLog();
-                if (log.length() > 0) {
-                    this.Log(log);
-                }
-            }
-            this.commit()
-        } catch (JSONException e) {
-            this.Log(e)
-        }
+
+        SchemaAdaptor adaptor = new SchemaAdaptor(this.mSchema, this.mProjectPackageName)
+        adaptor.parseJson(schemaText)
+        this.mSchema = adaptor.getSchema()
+
+        this.commit()
     }
 
-    String readFile(String filename) {
+    protected String readFile(String filename) {
         String content = null
         File file = new File(filename)
         FileReader reader
@@ -126,12 +115,12 @@ class GeneratorTask extends DefaultTask {
             content = new String(chars)
             reader.close()
         } catch (IOException e) {
-            this.Log(e)
+            Log.log(e)
         }
         return content
     }
 
-    void writeFile(String filename, String text) {
+    protected void writeFile(String filename, String text) {
         // File output
         Writer file = null
         try {
@@ -144,24 +133,15 @@ class GeneratorTask extends DefaultTask {
         }
     }
 
-    void commit() {
+    private void commit() {
         try {
+            println("--------------")
             (new DaoGenerator()).generateAll(this.mSchema, this.mJavaSrcDir)
-            this.Log("Models generated with versions: " + String.valueOf(this.mSchemaVersion))
+            println("--------------")
+            Log.log("Models generated with versions: " + String.valueOf(this.mSchemaVersion))
         } catch (Exception e) {
-            this.Log(e)
+            Log.log(e)
         }
-    }
-
-    void Log(String s){
-        println("GreenDaoGradle Generator > " + s)
-    }
-
-    void Log(Throwable e){
-        println("Error occured: " + e)
-        println("--------------")
-        println(e.getStackTrace().toString())
-        println("--------------")
     }
 }
 

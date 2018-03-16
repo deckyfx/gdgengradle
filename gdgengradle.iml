@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="gdgengradle" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="com.github.deckyfx" external.system.module.version="1.0.0" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="gdgengradle" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="com.github.deckyfx" external.system.module.version="1.0.2" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
@@ -39,9 +39,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Gradle: json-20180130">
+      <library name="Gradle: gson-2.8.2">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/json-20180130.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/gson-2.8.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -63,7 +63,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" exported="" name="freemarker-2.3.26-incubating" level="project" />
-    <orderEntry type="library" exported="" name="json-20180130" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.8.2" level="project" />
     <orderEntry type="library" exported="" name="gradle-api-4.5" level="project" />
     <orderEntry type="library" exported="" name="groovy-all-2.4.12" level="project" />
     <orderEntry type="library" exported="" name="gradle-installation-beacon-4.5" level="project" />
@@ -71,5 +71,16 @@
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="gradle-test-kit-4.5" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="_Users_admin_Documents_GitHub_gdgengradle_build_pluginUnderTestMetadata" level="project" />
+    <orderEntry type="library" exported="" name="gdgengradle.gdgengradle-1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="gdgengradle.gdgengradle-1.0.2-sources" level="project" />
+    <orderEntry type="library" exported="" name="gdgengradle.gdgengradle-1.0.2-javadoc" level="project" />
+    <orderEntry type="library" exported="" name="gdgengradle.gdgengradle-1.0.2-groovydoc" level="project" />
+    <orderEntry type="library" exported="" name="gdgengradle.gdgengradle-1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="gdgengradle.gdgengradle-1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="gdgengradle.gdgengradle-1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="gdgengradle.gdgengradle-1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="gdgengradle.gdgengradle-1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="gdgengradle.gdgengradle-1.0.2" level="project" />
+    <orderEntry type="library" exported="" name="gdgengradle.gdgengradle-1.0.2" level="project" />
   </component>
 </module>
