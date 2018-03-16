@@ -30,14 +30,18 @@ class Model extends AbstractData {
 
     @Override
     public void init() {
-        if (this.extendsClass?.trim()) {
-            this.importClass.add(this.extendsClass)
-        }
-        for (String implement : this.implementsClass) {
-            this.importClass.add(implement)
-        }
         for (int i = 0; i < this.importClass.size(); i++) {
             this.importClass.set(i, this.replaceProjectPackagePlaceHolder(this.importClass.get(i)))
+        }
+        if (this.extendsClass?.trim()) {
+            if (!this.isImporting(this.extendsClass)) {
+                this.importClass.add(this.extendsClass)
+            }
+        }
+        for (String implement : this.implementsClass) {
+            if (!this.isImporting(this.extendsClass)) {
+                this.importClass.add(implement)
+            }
         }
         if (this.anotation?.trim()) {
             this.anotation = this.anotation.startsWith("@")? this.anotation:("@" + this.anotation)
@@ -51,5 +55,15 @@ class Model extends AbstractData {
             }
         }
         return null
+    }
+
+    private boolean isImporting(String className){
+        for (int i = 0; i < this.importClass.size(); i++) {
+            String cls = this.importClass.get(i)
+            if (cls.equals(className) || cls.endsWith(className)) {
+                return true
+            }
+        }
+        return false
     }
 }

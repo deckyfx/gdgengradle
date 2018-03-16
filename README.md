@@ -14,7 +14,7 @@ SubClass of greenDAO Generator, read schema from your schema json file, support 
 
 ```
 buildscript {
-    ext.gdgengradle_version = '1.0.2'
+    ext.gdgengradle_version = '1.0.3'
     repositories {
         maven {
             url "https://plugins.gradle.org/m2/"
