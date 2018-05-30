@@ -24,7 +24,7 @@ apply plugin: 'java-gradle-plugin'
 // project
 
 group 'com.github.deckyfx'
-version '1.0.3'
+version '1.0.5'
 sourceCompatibility = 1.8
 
 repositories {

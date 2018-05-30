@@ -84,7 +84,6 @@ class SchemaAdaptor {
                 case AbstractData.FieldType.BOOL :
                 case AbstractData.FieldType.FLAG :
                     propbuilder                  = entity.addBooleanProperty(field.name)
-                    propbuilder.primaryKey()
                     break
                 case AbstractData.FieldType.BYTEARRAY :
                     propbuilder                  = entity.addByteArrayProperty(field.name)
@@ -193,10 +192,10 @@ class SchemaAdaptor {
 
     private void buildRelation(Model model) {        
         for (int i = 0; i < model.relations.size(); i++) {
-            relation.projectPackage = this.projectPackage
             Relation relation = model.relations.get(i)
+            relation.projectPackage = this.projectPackage
             relation.init()
-            assert relation.type : "Need to have relation type, hasOne or hasMany"
+            assert relation.type : "Need to have relation type, hasone or hasmany"
             assert relation.target : "Need to set model target"
             assert relation.chainField : "Need to set chainField"
             Model dstTable = this.mEntities.get(relation.target)
@@ -208,10 +207,10 @@ class SchemaAdaptor {
             RelationBase relationBase
             switch (relation.type) {
                 case AbstractData.RelationType.HASMANY:
-                    relationBase = dstTable.entity.createToMany(dstTable.getEntity(), field.property, relation.name)
+                    relationBase = dstTable.entity.createToMany(dstTable.entity, field.property, relation.name)
                     break
                 case AbstractData.RelationType.HASONE:
-                    relationBase = dstTable.entity.createToOne(dstTable.getEntity(), field.property, relation.name)
+                    relationBase = dstTable.entity.createToOne(dstTable.entity, field.property, relation.name)
                     break
             }
             if (relation.anotation?.trim()) {
