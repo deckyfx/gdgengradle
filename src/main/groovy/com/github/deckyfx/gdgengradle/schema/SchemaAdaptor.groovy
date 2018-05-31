@@ -207,10 +207,10 @@ class SchemaAdaptor {
             RelationBase relationBase
             switch (relation.type) {
                 case AbstractData.RelationType.HASMANY:
-                    relationBase = dstTable.entity.createToMany(dstTable.entity, field.property, relation.name)
+                    relationBase = model.entity.createToMany(dstTable.entity, field.property, relation.name)
                     break
                 case AbstractData.RelationType.HASONE:
-                    relationBase = dstTable.entity.createToOne(dstTable.entity, field.property, relation.name)
+                    relationBase = model.entity.createToOne(dstTable.entity, field.property, relation.name)
                     break
             }
             if (relation.anotation?.trim()) {
@@ -237,7 +237,16 @@ class SchemaAdaptor {
             if (relation.javadocGetterSetter?.trim()) {
                 relationBase.setJavaDocGetterAndSetter(relation.javadocGetterSetter)
             }
+
             Log.log("Relate " + model.name + " " + relation.type.toString() + " " + dstTable.name + " via " + relation.chainField + " as "+relation.name+", ")
+            switch (relation.type) {
+                case AbstractData.RelationType.HASMANY:
+                    model.entity.addToMany(relationBase, dstTable.entity)
+                    break
+                case AbstractData.RelationType.HASONE:
+                    model.entity.addToOne(relationBase)
+                    break
+            }
         }
     }
 

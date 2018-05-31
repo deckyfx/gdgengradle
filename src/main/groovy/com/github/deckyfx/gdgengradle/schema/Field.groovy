@@ -25,8 +25,8 @@ class Field extends AbstractData {
     public boolean              autoIncrement
     public boolean              notNull
     public boolean              unique
-    public Object               defaultValue
 
+    public Object               defaultValue
     public Property             property
 
     public void init() {
