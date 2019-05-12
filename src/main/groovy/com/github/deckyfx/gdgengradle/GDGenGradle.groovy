@@ -24,7 +24,7 @@ class GDGenGradle implements Plugin<Project> {
         generateModelTask.each {
             task->
                 GenerateModel t        = (GenerateModel) task
-                t.execute()
+                t.start()
         }
     }
 }
